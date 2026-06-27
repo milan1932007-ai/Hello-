@@ -1,0 +1,51 @@
+// Grey Water Management and Reuse System
+
+const int waterSensor = A0;
+const int soilSensor = A1;
+const int relayPin = 8;
+const int ledPin = 13;
+const int buzzerPin = 9;
+
+int waterValue = 0;
+int soilValue = 0;
+
+void setup()
+{
+  pinMode(relayPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  digitalWrite(relayPin, LOW);
+  digitalWrite(ledPin, LOW);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  waterValue = analogRead(waterSensor);
+  soilValue = analogRead(soilSensor);
+
+  Serial.print("Water Level: ");
+  Serial.print(waterValue);
+
+  Serial.print("  Soil Moisture: ");
+  Serial.println(soilValue);
+
+  // Pump ON if water is available and soil is dry
+  if (waterValue > 500 && soilValue > 600)
+  {
+    digitalWrite(relayPin, HIGH);
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+    delay(300);
+    digitalWrite(buzzerPin, LOW);
+  }
+  else
+  {
+    digitalWrite(relayPin, LOW);
+    digitalWrite(ledPin, LOW);
+  }
+
+  delay(1000);
+}
